@@ -17,7 +17,7 @@ gVector gVector_init(size_t memory_size, size_t capacity) {
 
   size_t cap = capacity == 0 ? INITIAL_CAPACITY : capacity;
 
-  if (SIZE_MAX / capacity < memory_size) {
+  if (SIZE_MAX / cap < memory_size) {
     return (gVector){0};
   }
 
