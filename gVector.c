@@ -31,4 +31,6 @@ gVector gVector_init(size_t memory_size, size_t capacity) {
       .size = 0, .capacity = cap, .memory_size = memory_size, .items = mem};
 }
 
+bool gVector_push(gVector *v, const void *element) { return true; }
+
 int main(int argc, char *argv[]) { return EXIT_SUCCESS; }
