@@ -68,38 +68,98 @@ bool gVector_push(gVector *v, const void *element) {
   return true;
 }
 
-void toolTest() {
-  gVector tool = gVector_init(sizeof(int), 2);
-
-  printf("capacity: %zu\n", tool.capacity);
-  printf("memory: %zu\n", tool.memory_size);
-  printf("size: %zu\n", tool.size);
-
-  gVector_push(&tool, &(int){46});
-  printf("capacity: %zu\n", tool.capacity);
-  printf("memory: %zu\n", tool.memory_size);
-  printf("size: %zu\n", tool.size);
-
-  gVector_push(&tool, &(int){2});
-  printf("capacity: %zu\n", tool.capacity);
-  printf("memory: %zu\n", tool.memory_size);
-  printf("size: %zu\n", tool.size);
-
-  gVector_push(&tool, &(int){7});
-  gVector_push(&tool, &(int){0});
-  gVector_push(&tool, &(int){0});
-  gVector_push(&tool, &(int){1});
-
-  printf("capacity: %zu\n", tool.capacity);
-  printf("memory: %zu\n", tool.memory_size);
-  printf("size: %zu\n", tool.size);
-
-  for (int i = 0; i < tool.size; i++) {
-    printf("item %d: %d\n", i, ((int *)tool.items)[i]);
+bool gVector_pop(gVector *v, void *out) {
+  if (v == NULL || out == NULL || v->items == NULL || v->size == 0) {
+    return false;
   }
+
+  size_t byte_offset = (v->size - 1) * v->memory_size;
+
+  unsigned char *removed = (unsigned char *)v->items + byte_offset;
+
+  memcpy(out, removed, v->memory_size);
+  v->size--;
+  return true;
+}
+
+void pushTest() {
+  gVector push = gVector_init(sizeof(int), 2);
+
+  printf("capacity: %zu\n", push.capacity);
+  printf("memory: %zu\n", push.memory_size);
+  printf("size: %zu\n", push.size);
+
+  gVector_push(&push, &(int){46});
+  printf("capacity: %zu\n", push.capacity);
+  printf("memory: %zu\n", push.memory_size);
+  printf("size: %zu\n", push.size);
+
+  gVector_push(&push, &(int){2});
+  printf("capacity: %zu\n", push.capacity);
+  printf("memory: %zu\n", push.memory_size);
+  printf("size: %zu\n", push.size);
+
+  gVector_push(&push, &(int){7});
+  gVector_push(&push, &(int){0});
+  gVector_push(&push, &(int){0});
+  gVector_push(&push, &(int){1});
+
+  printf("capacity: %zu\n", push.capacity);
+  printf("memory: %zu\n", push.memory_size);
+  printf("size: %zu\n", push.size);
+
+  for (int i = 0; i < push.size; i++) {
+    printf("item %d: %d\n", i, ((int *)push.items)[i]);
+  }
+
+  free(push.items);
+}
+
+void popTest() {
+  gVector v = gVector_init(sizeof(int), 5);
+
+  for (int i = 0; i < 5; i++) {
+    gVector_push(&v, &(int){i});
+    printf("vector item %d: %d\n", i, ((int *)v.items)[i]);
+  }
+
+  int x;
+
+  gVector_pop(&v, &x);
+
+  printf("popped item: %d\n", x);
+
+  for (int i = 0; i < v.size; i++) {
+    printf("vector item %d: %d\n", i, ((int *)v.items)[i]);
+  }
+
+  gVector_push(&v, &(int){99});
+
+  for (int i = 0; i < v.size; i++) {
+    printf("vector item %d: %d\n", i, ((int *)v.items)[i]);
+  }
+
+  int y;
+
+  while (gVector_pop(&v, &y)) {
+    printf("Popped: %d\n", y);
+  }
+
+  for (int i = 0; i < v.size; i++) {
+    printf("vector item %d: %d\n", i, ((int *)v.items)[i]);
+  }
+
+  int z;
+  bool pop_value;
+
+  pop_value = gVector_pop(&v, &z);
+  printf("%d\n", pop_value);
+
+  free(v.items);
 }
 
 int main(int argc, char *argv[]) {
-  toolTest();
+  // pushTest();
+  popTest();
   return EXIT_SUCCESS;
 }
