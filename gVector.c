@@ -217,9 +217,39 @@ void getTest() {
   free(get.items);
 }
 
+void setTest() {
+  gVector set = gVector_init(sizeof(int), 5);
+  for (int i = 0; i < 5; i++) {
+    gVector_push(&set, &(int){i});
+  }
+
+  for (int j = 0; j < set.size; j++) {
+    printf("index %d | value %d\n", j, ((int *)set.items)[j]);
+  }
+
+  bool boo = gVector_set(&set, &(int){99}, 3);
+  printf("%d\n", boo);
+
+  for (int j = 0; j < set.size; j++) {
+    printf("index %d | value %d\n", j, ((int *)set.items)[j]);
+  }
+
+  boo = gVector_set(&set, &(int){123}, 10);
+  if (boo == false) {
+    printf("set failed as expected: %d\n", boo);
+  }
+
+  for (int j = 0; j < set.size; j++) {
+    printf("index %d | value %d\n", j, ((int *)set.items)[j]);
+  }
+
+  free(set.items);
+}
+
 int main(int argc, char *argv[]) {
   // pushTest();
   // popTest();
-  getTest();
+  // getTest();
+  setTest();
   return EXIT_SUCCESS;
 }
