@@ -82,6 +82,23 @@ bool gVector_pop(gVector *v, void *out) {
   return true;
 }
 
+bool gVector_get(const gVector *v, void *out, size_t index) {
+  if (v == NULL || v->size == 0 || v->items == NULL || out == NULL) {
+    return false;
+  }
+
+  if (index >= v->size) {
+    return false;
+  }
+
+  size_t byte_offset = index * v->memory_size;
+
+  const unsigned char *get = (unsigned char *)v->items + byte_offset;
+  memcpy(out, get, v->memory_size);
+
+  return true;
+}
+
 void pushTest() {
   gVector push = gVector_init(sizeof(int), 2);
 
@@ -158,8 +175,35 @@ void popTest() {
   free(v.items);
 }
 
+void getTest() {
+  gVector get = gVector_init(sizeof(int), 5);
+
+  gVector_push(&get, &(int){10});
+  gVector_push(&get, &(int){20});
+  gVector_push(&get, &(int){30});
+
+  for (int i = 0; i < get.size; i++) {
+    printf("index: %d | value: %d\n", i, ((int *)get.items)[i]);
+  }
+
+  int x;
+  bool boo_lean = gVector_get(&get, &x, 0);
+  printf("boo = %d | x = %d\n", boo_lean, x);
+
+  boo_lean = gVector_get(&get, &x, 1);
+  printf("boo = %d | x = %d\n", boo_lean, x);
+
+  boo_lean = gVector_get(&get, &x, 2);
+  printf("boo = %d | x = %d\n", boo_lean, x);
+
+  boo_lean = gVector_get(&get, &x, 10);
+  printf("boo = %d | x = %d\n", boo_lean, x);
+  free(get.items);
+}
+
 int main(int argc, char *argv[]) {
   // pushTest();
-  popTest();
+  // popTest();
+  getTest();
   return EXIT_SUCCESS;
 }
