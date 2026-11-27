@@ -99,6 +99,22 @@ bool gVector_get(const gVector *v, void *out, size_t index) {
   return true;
 }
 
+bool gVector_set(gVector *v, void *element, size_t index) {
+  if (v == NULL || element == NULL || v->items == NULL) {
+    return false;
+  }
+
+  if (index >= v->size) {
+    return false;
+  }
+
+  size_t byte_offset = index * v->memory_size;
+  unsigned char *dest = (unsigned char *)v->items + byte_offset;
+
+  memcpy(dest, element, v->memory_size);
+
+  return true;
+}
 void pushTest() {
   gVector push = gVector_init(sizeof(int), 2);
 
