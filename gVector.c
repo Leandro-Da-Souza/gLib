@@ -115,6 +115,15 @@ bool gVector_set(gVector *v, void *element, size_t index) {
 
   return true;
 }
+
+bool gVector_free(gVector *v) {
+  if (v == NULL || v->items == NULL) {
+    return false;
+  }
+  free(v->items);
+  *v = (gVector){0};
+  return true;
+}
 void pushTest() {
   gVector push = gVector_init(sizeof(int), 2);
 
